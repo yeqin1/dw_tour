@@ -1,0 +1,30 @@
+---
+config:
+  failure.emails: noreply@foo.com
+
+nodes:
+  - name: MergeLocationJob
+    type: command
+    config:
+      command: sh /usr/local/data/tour/MergeLocationJob.sh ${day_id}
+
+  - name: StayPointJob
+    type: command
+    config:
+      command: sh /usr/local/data/tour/StayPointJob.sh ${day_id}
+    dependsOn:
+      - MergeLocationJob
+
+  - name: CityTouristJob
+    type: command
+    config:
+      command: sh /usr/local/data/tour/CityTouristJob.sh ${day_id}
+    dependsOn:
+      - StayPointJob
+
+  - name: CityTouristIndex
+    type: command
+    config:
+      command: sh /usr/local/data/tour/CityTouristIndex.sh ${day_id}
+    dependsOn:
+      - CityTouristJob
